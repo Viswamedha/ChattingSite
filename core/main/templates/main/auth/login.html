@@ -1,0 +1,26 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link type="text/css" href="{% static 'main/css/login.css' %}" rel = 'stylesheet'>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"><meta charset="utf-8">
+</head>
+<body style = 'background-image: "static/main/login-background.html";'>
+    <div class="logo"></div>
+    <div class="login-block">
+        <form method="post">
+            <h1>Login</h1>
+            {% csrf_token %}
+            <p class = 'error'>{{ error }}</p>
+            {{ form.email.label }}
+            {{ form.email }}
+            {{ form.password.label }}
+            {{ form.password }}
+            <button name = 'LoginButton' type = 'submit'>Submit</button>
+        </form>
+        <a href = "../signup/" style = "text-align: center;">Do not have an account?</a>
+    </div>
+</body>
+</html>

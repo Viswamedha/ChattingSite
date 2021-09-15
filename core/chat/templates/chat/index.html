@@ -1,0 +1,14 @@
+<html>
+<head>
+
+</head>
+<body>
+    {% for room in public_rooms %}
+        <a href = "{{ room.slug }}">{{ room.slug }}</a> <br>
+    {% endfor %}
+    {% for room in private_rooms %}
+        <a href = "{{ room.slug }}">{{ room.slug }}</a> <br>
+    {% endfor %}
+    
+</body>
+</html> 
