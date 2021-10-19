@@ -1,9 +1,11 @@
-from django.urls import path 
-from . import views
+
+
+
+from django.urls import path
+
+from .views import *
 
 urlpatterns = [
-    path('', views.index, name = 'index'),
-    path('<slug:room_name>/', views.room, name = 'room')
+    path('', all_chats),
+    path('<slug:room_name>/', room, name = 'room')
 ]
-
-

@@ -1,10 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from main.models import User
-import uuid 
 from django.template.defaultfilters import slugify
-import pytz
+import uuid, pytz
 
+# Create your models here.
 class Room(models.Model):
 
     tag = models.UUIDField(verbose_name = 'Tag', default = uuid.uuid4, editable = False)
@@ -43,4 +43,3 @@ class Message(models.Model):
 
     class Meta:
         ordering = ('sent',)
-    

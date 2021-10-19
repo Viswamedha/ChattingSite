@@ -1,7 +1,4 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-
-import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer # The class we're using
 from asgiref.sync import sync_to_async # Implement later
@@ -46,7 +43,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-            'type': 'chat_message',
+            'type': 'chat.message',
             'message': message,
             'username': username
             }
@@ -62,6 +59,67 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'message': message,
             'username': username
         }))
+
+
+
+
+
+
+class NewConsumer(AsyncWebsocketConsumer):
+
+    # async def websocket_connect(self, event):
+    #     print(event)
+    #     await self.accept()
+
+    # async def websocket_receive(self, event):
+    #     print(event["text"])
+    #     await self.send({
+    #         "type": "websocket.send",
+    #         "text": event["text"],
+    #     })
+    
+
+    async def connect(self):
+        
+        await self.accept()
+        
+    
+    # async def receive(self, text_data=None, bytes_data=None):
+        
+    #     await self.send({
+    #         "type": "websocket.send",
+    #         "text": "text",
+    #     })
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        # print(self.scope)
+        print(self.scope['user'])
+        print(data)
+
+        if 'Connection' in data:
+            print(data['Connection'])
+            if data['Connection'] == 1:
+                return await self.disconnect(408)
+        await self.send(
+            text_data=json.dumps({
+            'Text': data.get('Text'),
+            'User': self.scope['user'].username
+        })
+        )
+
+
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):   
+
+        await self.accept()
+
+    
+
+
 
 '''
 class ChatRoomConsumer(AsyncWebsocketConsumer):

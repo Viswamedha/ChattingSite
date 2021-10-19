@@ -1,0 +1,119 @@
+{% extends 'Everything.html' %}
+{% load static %}
+{% block head%}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <title>{{ country.name }}</title>
+
+    <style>
+        body {
+            background-image: url('{% static "assets/img/Background.png" %}');
+        }
+    </style>
+
+{% endblock %}
+{% block body %}
+    <div class="row m-auto">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="margin-top: 2rem;">
+            <h1 class="card-title text-center">{{ country.name }}</h1>
+            
+                
+            
+        </div>
+        <div class="col-md-2">
+            <span class="float-right" style="margin-top: 1rem;">
+                <a href="/"><button class="btn btn-secondary red">Return to Home</button></a>
+            </span>
+            
+        </div>
+
+    </div>
+
+    <div class="row m-auto">
+        <div class="col-md-5"></div>
+        <div class="col-md-2" style="margin-top: 2rem;">
+            <div class="card">
+                <div class="card-body align-items-center d-flex justify-content-center">
+                    <div class="dropdown">
+                        <button class="btn green dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select A Country
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {% for new_country in countries %}
+                                <a class="dropdown-item {% if new_country.slug == country.slug %}active{% endif %}" href="/countries/{{ new_country.slug }}">{{ new_country.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+
+    <div class="row m-auto">
+        <div class="col-md-3" style="margin-top: 2rem;">
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    Statistics
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Capital: <span class="pull-right">{{ country.capital }}</span></li>
+                        <li class="list-group-item">Population: <span class="pull-right">{{ country.population }}</span></li>
+                        <li class="list-group-item">Currency: <span class="pull-right">{{ country.currency }}</span></li>
+                        <li class="list-group-item">Other Large Cities: <span class="pull-right">{{ country.other_large_cities }}</span></li>
+                        <li class="list-group-item">Key Landmarks: <span class="pull-right">{{ country.key_landmarks }}</span></li>
+                        <li class="list-group-item">National Language: <span class="pull-right">{{ country.national_language }}</span></li>
+                        <li class="list-group-item">National Animal: <span class="pull-right">{{ country.national_animal }}</span></li>
+                        <li class="list-group-item">National Sport: <span class="pull-right">{{ country.national_sport }}</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="margin-top: 2rem;">
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    Content
+                </div>
+                <div class="card-body">
+                    {{ country.content }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 2rem;">
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="card-header">
+                    Toggles
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Flag" aria-expanded="false" aria-controls="collapseExample">
+                        Flag
+                    </button>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#Map" aria-expanded="false" aria-controls="collapseExample">
+                        Map
+                    </button>
+                </div>
+            </div>
+            <div class="card" id="Flag">
+                <div class="card-header">
+                    Flag
+                </div>
+                <img class="card-img-top" src="{{ country.flag.url }}" alt="Image">
+            </div>
+            <div class="card" id="Map" style="margin-top: 2rem;">
+                <div class="card-header">
+                    Location
+                </div>
+                <div class="card-body">
+                    <iframe src="{{ country.location }}" style="height: 20rem;" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

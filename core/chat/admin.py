@@ -1,15 +1,7 @@
 from django.contrib import admin
-from .models import *
 
-@admin.register(Room)
-class RoomAdmin(admin.ModelAdmin):
+# Register your models here.
+from .models import * 
 
-
-    pass 
-
-
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-
-
-    pass
+admin.site.register(Message)
+admin.site.register(Room)

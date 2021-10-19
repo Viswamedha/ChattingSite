@@ -1,0 +1,244 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>{{ room.name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <!-- <link type="text/css" href="{% static 'chat/css/chatroom.css' %}" rel = 'stylesheet'> -->
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  </head>
+
+  <body>
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+            <div class="column is-12">
+              <section class="hero is-primary">
+                <div class="hero-body">
+                  <p class="title">{{ room.name }}</p>
+                  <p class="subtitle">{{ room.description }}</p>
+                  <p class="subtitle">Occupants: {{ room.maximum }}</p>
+                </div>
+              </section>
+            </div>
+            <div class="column is-12">
+                <h5 id="disconnect-error"></h5>
+            </div>
+            <div class="column is-12">
+              <div class="box">     
+                <div id="chat-messages" style="max-height: 300px; overflow-y: scroll; word-wrap: break-word;">
+                    {% for m in messages %}
+                        <p style = "float:left;"><b>{{ m.author.username }}</b>: {{ m.content }}</p>
+                        <p style = "float:right;">{{ m.created }}</p>
+                        <div style = "clear:both;"></div>
+                    {% endfor %}
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <input class="input" type="text" placeholder="Message" id="chat-message-input">
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <a class="button is-info" id="chat-message-submit">Submit</a>
+                </div>
+              </div>
+              
+              <small class="has-text-grey-light">Your username: {{ request.user.username }}</small>
+            </div>
+          </div>
+       </div>
+    </section>
+    {{ room.slug|json_script:"json-roomname" }}
+    {{ request.user.username|json_script:"json-username" }}
+    <!-- <script>
+        const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+        const userName = JSON.parse(document.getElementById('json-username').textContent);
+        var wsStart = 'ws://';
+        var loc = window.location;
+        if(loc.protocol == 'https:'){
+            var wsStart = 'wss://';
+        }
+
+        let chatSocket = new WebSocket(
+            wsStart
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+        // const chatSocket = new WebSocket(
+        // 'ws://'
+        // + window.location.host
+        // + '/ws/'
+        // + roomName
+        // + '/'
+        // );
+
+        chatSocket.onmessage = function(e) {
+            console.log('onMessage');
+            scrollToBottom();
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('The socket closed unexpectedly');
+        };
+
+        var months = {
+            0:"Jan",
+            1:"Feb",
+            2:"Mar",
+            3:"Apr",
+            4:"May",
+            5:"Jun",
+            6:"Jul",
+            7:"Aug",
+            8:"Sep",
+            9:"Oct",
+            10:"Nov",
+            11:"Dec"
+        }
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            if (data.message) {
+                var current = new Date();
+                m = current.getMonth();
+                m = months[m].toString()
+                d = current.getDate().toString()
+                y = current.getFullYear().toString()
+                a = current.getHours().toString()
+                if (a.length == 1) { a = '0'+ a} 
+                b = current.getMinutes().toString()
+                if (b.length == 1) { b = '0' + b}
+                c = current.getSeconds().toString()
+                if (c.length == 1) {c = '0' + c}
+                t = a + ':' + b + ':' + c
+                sig = m + ' ' + d + ', ' + y + ' ' + t
+                newmessage = '<p style = "float:left;"><b>' + data.username + '</b>: '+ data.message +'</p><p style = "float:right;"> ' + sig +' </p><div style = "clear:both;"></div>'
+
+                document.querySelector('#chat-messages').innerHTML += (newmessage);
+                scrollToBottom();
+            } else {
+                alert('The message was empty!')
+            }
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#chat-message-submit').click();
+        }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }));
+
+        messageInputDom.value = '';
+        };
+        function scrollToBottom() {
+            let objDiv = document.getElementById("chat-messages");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        // Add this below the function to trigger the scroll on load.
+        scrollToBottom();
+    </script> -->
+    <script>
+        const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+        const userName = JSON.parse(document.getElementById('json-username').textContent);
+        var wsStart = 'ws://';
+        var loc = window.location;
+        if(loc.protocol == 'https:'){
+            var wsStart = 'wss://';
+        }
+
+        let chatSocket = new WebSocket(
+            wsStart
+            + window.location.host
+            + '/ws/testing/'
+        );
+        // const chatSocket = new WebSocket(
+        // 'ws://'
+        // + window.location.host
+        // + '/ws/'
+        // + roomName
+        // + '/'
+        // );
+        var timeout;
+
+        function sleep(delay) {
+            if(timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(function() {
+                myFunction();
+            }, delay);
+        }
+        chatSocket.onmessage = function(e) {
+            console.log('onMessage');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('The socket closed unexpectedly');
+            document.getElementById('disconnect-error').value="Connection Lost - Please Reload";
+        };
+
+     
+
+        chatSocket.onmessage = function(e) {
+            
+            const data = JSON.parse(e.data);
+            console.log(data);
+            console.log(data.Text);
+
+            if (data.Text) {
+                rest = document.getElementById('chat-messages').innerHTML;
+                rest = document.querySelector('#chat-messages');
+                console.log(rest.innerHTML);
+                rest.innerHTML += "<p style = 'float:left;'><b>" + data.User + "</b>: " + data.Text + "</p><p style = 'float:right;'>{{ m.created }}</p><div style = 'clear:both;'></div>"
+               data.message;
+            } else {
+                // alert('The message was empty!')
+            }
+        };
+
+        chatSocket.onopen = () => chatSocket.send(
+            JSON.stringify(
+                {
+                    'Connection': 0
+                }
+            )
+        );
+
+        function SendMessage(data) {
+            chatSocket.send(JSON.stringify({
+                'Text': data
+            }));
+        };
+
+        
+
+    </script>
+    <script type="text/javascript">
+        $('#chat-message-submit').click(function(){
+            var data = document.getElementById('chat-message-input').value  ;
+            chatSocket.send(JSON.stringify({
+                'Text': data
+            }));
+        })
+    </script>
+  </body>
+</html>

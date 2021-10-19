@@ -1,14 +1,20 @@
+from .models import * 
 from django import forms
+import datetime 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from datetime import datetime
-from .models import User
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
 
 class CreateUserForm(forms.ModelForm):
     email = forms.EmailField(
         widget = forms.EmailInput(
             attrs = { 
-                'placeholder': 'Enter Email Address'
+                'placeholder': 'Enter Email Address',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'Email Address: '
@@ -16,15 +22,19 @@ class CreateUserForm(forms.ModelForm):
     username = forms.CharField(
         widget = forms.TextInput(
             attrs = {
-                'placeholder': 'Enter Username'
+                'placeholder': 'Enter Username',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'Username: '
     )
     date_of_birth = forms.DateField(
-        widget = forms.DateInput(
+        widget = DateInput(
             attrs = {
-                'type': 'date'
+                'type': 'date',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ),
         label = 'Date of birth: '
@@ -32,7 +42,9 @@ class CreateUserForm(forms.ModelForm):
     first_name = forms.CharField(
         widget = forms.TextInput(
             attrs = {
-                'placeholder': 'Enter First Name'
+                'placeholder': 'Enter First Name',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'First Name: '
@@ -40,7 +52,9 @@ class CreateUserForm(forms.ModelForm):
     last_name = forms.CharField(
         widget = forms.TextInput(
             attrs = {
-                'placeholder': 'Enter Last Name'
+                'placeholder': 'Enter Last Name',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'Last Name: '
@@ -48,7 +62,9 @@ class CreateUserForm(forms.ModelForm):
     password = forms.CharField(
         widget = forms.PasswordInput(
             attrs = {
-                'placeholder': 'Enter Password'
+                'placeholder': 'Enter Password',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'Password: '
@@ -56,7 +72,9 @@ class CreateUserForm(forms.ModelForm):
     confirm_password = forms.CharField(
         widget = forms.PasswordInput(
             attrs = {
-                'placeholder': 'Re-enter Password'
+                'placeholder': 'Re-enter Password',
+                'class': 'form-control',
+                'style': 'margin: 0.5rem;',
             }
         ), 
         label = 'Confirm Password: '
@@ -83,7 +101,7 @@ class EditUserForm(forms.ModelForm):
         model = User
         fields = ('email', 'username', 'date_of_birth', 'first_name', 'last_name', 'is_active', 'is_admin', 'is_verified')
         widgets = {
-            'date_of_birth': forms.SelectDateWidget(years=[str(i) for i in range(int(datetime.now().year)-70, int(datetime.now().year)-10)][::-1])  
+            'date_of_birth': forms.SelectDateWidget(years=[str(i) for i in range(int(datetime.datetime.now().year)-70, int(datetime.datetime.now().year)-10)][::-1])  
         }
 
     def clean_password(self): 
@@ -95,7 +113,9 @@ class LoginForm(forms.Form):
         widget = forms.EmailInput(
             attrs = {
                 'placeholder': 'Enter Email Address',
-                'id': 'email'
+                'id': 'email',
+                'class': 'form-control',
+                'style': 'margin-bottom: 1rem;',
             }
         ),
         label = 'Email Address: '
@@ -104,7 +124,9 @@ class LoginForm(forms.Form):
         widget = forms.PasswordInput(
             attrs = {
                 'placeholder': 'Enter Password Here',
-                'id': 'password'
+                'id': 'password',
+                'class': 'form-control',
+                'style': 'margin-bottom: 1rem;',
             }
         ),
         label = 'Password: '
@@ -119,40 +141,3 @@ class LoginForm(forms.Form):
             return user
         else: 
             return None
-
-
-class ResetRequestForm(forms.Form):
-    email = forms.EmailField()
-    def validate(self):
-        try:
-            user = User.objects.get(email=self.cleaned_data["email"])
-            if user: 
-                if user.is_verified:
-                    return user
-            return False
-        except Exception as e: 
-            print(e)
-            return False
-
-
-class ResetPasswordForm(forms.ModelForm):
-    password_1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
-
-    class Meta:
-        model = User
-        fields = ()
-    
-    def validate(self):
-        if self.cleaned_data['password_1'] == self.cleaned_data['password_2']:
-            self.instance.set_password(self.cleaned_data['password_1'])
-            self.instance.save()
-            return True
-        return False
-
-
-
-
-
-
-
