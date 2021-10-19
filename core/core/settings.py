@@ -69,7 +69,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DATABASES = {
     'default': config(
-        'DB_URL',
+        'DB_URLS',
         default = 'sqlite:///db.sqlite3',
         cast = db_url
     )
